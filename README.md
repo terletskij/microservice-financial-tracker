@@ -7,7 +7,7 @@ Microservice-based application for managing personal finances.
   - [ ] Implement user registration and login
   - [ ] JWT token generation and validation
 - **Transaction Service**
-  - [ ] **Entity & Database**: create `Transaction` entity and configure PostgreSQL connection
+  - [x] **Entity & Database**: create `Transaction` entity and configure PostgreSQL connection
   - [ ] **Service & Repository**: implement `TransactionService` and `TransactionRepository` for CRUD operations
   - [ ] **Validation & Error Handling**: Implement data validation and global error handling
   - [ ] **Documentation**: Integrate Swagger/OpenAPI for API documentation
