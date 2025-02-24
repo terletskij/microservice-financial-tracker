@@ -11,10 +11,13 @@ import java.math.BigDecimal;
 @Data
 public class UpdateTransactionRequest {
 
+    @NotNull(message = "Transaction type is required")
     private TransactionType type;
 
+    @NotNull(message = "Amount is required")
     @Min(value = 0, message = "Amount must be positive")
     private BigDecimal amount;
 
+    @NotBlank(message = "Description is required")
     private String description;
 }
