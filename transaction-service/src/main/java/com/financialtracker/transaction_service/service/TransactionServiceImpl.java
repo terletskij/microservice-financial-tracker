@@ -31,18 +31,16 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Transaction createTransaction(CreateTransactionRequest request, Long userId) {
-        Transaction transaction = new Transaction();
-        transaction.setType(request.getType());
-        transaction.setAmount(request.getAmount());
-        transaction.setDescription(request.getDescription());
+        Transaction transaction = modelMapper.map(request, Transaction.class);
         transaction.setUserId(userId);
-
         return transactionRepository.save(transaction);
     }
 
     @Override
     public void deleteTransactionById(Long id) {
-        transactionRepository.deleteById(id);
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        transactionRepository.delete(transaction);
     }
 
     @Override
@@ -61,15 +59,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Transaction convertFromDto(TransactionDto dto) {
-        Transaction transaction = new Transaction();
-        transaction.setUserId(dto.getUserId());
-        transaction.setId(dto.getId());
-        transaction.setType(dto.getType());
-        transaction.setAmount(dto.getAmount());
-        transaction.setDescription(dto.getDescription());
-        transaction.setCreatedAt(dto.getCreatedAt());
-        transaction.setUpdatedAt(dto.getUpdatedAt());
-        return transaction;
+        return modelMapper.map(dto, Transaction.class);
     }
 
     @Override
