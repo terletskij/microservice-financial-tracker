@@ -2,7 +2,6 @@ package com.financialtracker.transaction_service.entity;
 
 import com.financialtracker.transaction_service.enums.TransactionType;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
