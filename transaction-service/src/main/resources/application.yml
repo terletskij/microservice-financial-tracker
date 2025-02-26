@@ -18,3 +18,14 @@ spring:
       ddl-auto: update
   profiles:
     active: dev
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  info:
+    title: Transaction Service API
+    description: API for managing user transactions
+    tag-sorter: alpha
