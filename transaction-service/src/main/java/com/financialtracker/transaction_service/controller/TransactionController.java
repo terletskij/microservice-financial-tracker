@@ -7,6 +7,7 @@ import com.financialtracker.transaction_service.dto.response.ApiResponse;
 import com.financialtracker.transaction_service.entity.Transaction;
 import com.financialtracker.transaction_service.exceptions.ResourceNotFoundException;
 import com.financialtracker.transaction_service.service.TransactionService;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -27,7 +28,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createTransaction(@RequestBody CreateTransactionRequest request,
+    public ResponseEntity<ApiResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request,
                                                          @RequestHeader("X-User-Id") Long userId) {
         Transaction transaction = transactionService.createTransaction(request, userId);
         TransactionDto transactionDto = transactionService.convertToDto(transaction);
@@ -48,7 +49,8 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateTransaction(@PathVariable Long id, @RequestBody UpdateTransactionRequest request) {
+    public ResponseEntity<ApiResponse> updateTransaction(@PathVariable Long id,
+                                                         @Valid @RequestBody UpdateTransactionRequest request) {
         Transaction transaction = transactionService.updateTransactionById(id, request);
         TransactionDto dto = transactionService.convertToDto(transaction);
         return ResponseEntity.ok(new ApiResponse("Transaction update success", dto));
