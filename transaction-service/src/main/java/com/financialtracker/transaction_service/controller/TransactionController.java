@@ -36,12 +36,8 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getTransactionById(@PathVariable Long id) {
-        try {
-            TransactionDto transactionDto = transactionService.convertToDto(transactionService.getTransactionById(id));
-            return ResponseEntity.ok(new ApiResponse("Transaction successfully received", transactionDto));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
+        TransactionDto transactionDto = transactionService.convertToDto(transactionService.getTransactionById(id));
+        return ResponseEntity.ok(new ApiResponse("Transaction successfully received", transactionDto));
     }
 
     @GetMapping
@@ -58,14 +54,9 @@ public class TransactionController {
         return ResponseEntity.ok(new ApiResponse("Transaction update success", dto));
     }
 
-    // todo: handle error in GeneralExceptionHandler then change returning type to Void
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteTransaction(@PathVariable Long id) {
-        try {
-            transactionService.deleteTransactionById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Transaction not found", null));
-        }
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteTransactionById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
