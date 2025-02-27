@@ -11,7 +11,7 @@ Microservice-based application for managing personal finances.
   - [x] **Service & Repository**: implement `TransactionService` and `TransactionRepository` for CRUD operations
   - [x] **Controller**: implement `TransactionController`
   - [x] **Validation & Error Handling**: Implement data validation and global error handling
-  - [ ] **Documentation**: Integrate Swagger/OpenAPI for API documentation
+  - [x] **Documentation**: Integrate Swagger/OpenAPI for API documentation
   - [ ] **Testing**: Write unit and integration tests
 - **Notification Service**
   - [ ] Real-time notifications using WebSockets and Redis Pub/Sub
