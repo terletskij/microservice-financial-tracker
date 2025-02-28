@@ -2,6 +2,7 @@ package com.financialtracker.transaction_service.entity;
 
 import com.financialtracker.transaction_service.enums.TransactionType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_id_seq", allocationSize = 1)
 @Table(name = "transactions")
@@ -41,20 +43,4 @@ public class Transaction {
     private LocalDateTime updatedAt;
 
     public Transaction() {}
-
-    public Transaction(Long id,
-                       TransactionType type,
-                       BigDecimal amount,
-                       String description,
-                       Long userId,
-                       LocalDateTime createdAt,
-                       LocalDateTime updatedAt) {
-        this.id = id;
-        this.type = type;
-        this.amount = amount;
-        this.description = description;
-        this.userId = userId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }
