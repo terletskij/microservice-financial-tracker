@@ -12,7 +12,7 @@ Microservice-based application for managing personal finances.
   - [x] **Controller**: implement `TransactionController`
   - [x] **Validation & Error Handling**: Implement data validation and global error handling
   - [x] **Documentation**: Integrate Swagger/OpenAPI for API documentation
-  - [ ] **Testing**: Write unit and integration tests
+  - [x] **Testing**: Write unit and integration tests
 - **Notification Service**
   - [ ] Real-time notifications using WebSockets and Redis Pub/Sub
 - **API Gateway & Service Discovery**
