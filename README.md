@@ -8,6 +8,7 @@ Microservice-based application for managing personal finances.
 ## 🚀TODO
 
 - **Auth Service**
+  - [ ] Implement PostgreSQL table users (id, username, email, password, role).
   - [ ] Implement user registration and login
   - [ ] JWT token generation and validation
 - **Transaction Service**
@@ -17,7 +18,5 @@ Microservice-based application for managing personal finances.
   - [x] **Validation & Error Handling**: Implement data validation and global error handling
   - [x] **Documentation**: Integrate Swagger/OpenAPI for API documentation
   - [x] **Testing**: Write unit and integration tests
-- **Notification Service**
-  - [ ] Real-time notifications using WebSockets and Redis Pub/Sub
 - **API Gateway & Service Discovery**
   - [ ] Configure Spring Cloud Gateway for routing
