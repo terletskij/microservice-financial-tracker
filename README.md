@@ -8,7 +8,7 @@ Microservice-based application for managing personal finances.
 ## 🚀TODO
 
 - **Auth Service**
-  - [ ] Implement PostgreSQL table users (id, username, email, password, role).
+  - [ ] **Entity & Database**: create `User` entity and setup PostgreSQL table users with (id, username, email, password, role)
   - [ ] Implement user registration and login
   - [ ] JWT token generation and validation
 - **Transaction Service**
