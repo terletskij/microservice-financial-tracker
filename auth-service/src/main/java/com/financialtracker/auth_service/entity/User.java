@@ -4,11 +4,13 @@ import com.financialtracker.auth_service.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @SequenceGenerator(name = "users_seq", sequenceName = "users_id_seq", allocationSize = 1)
 @Table(name = "users")
 @Entity
