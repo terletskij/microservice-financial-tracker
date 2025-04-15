@@ -12,14 +12,14 @@ import java.util.Date;
 
 @Component
 public class JwtService {
-
-    @Value("${JWT_SECRET}")
+    // TODO: configure .env file with clear naming and without duplicates
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${JWT_EXPIRATION_TIME_IN_MILLIS}")
+    @Value("${jwt.expiration}")
     private int expirationTime;
 
-    @Value("${JWT_REFRESH_EXPIRATION_TIME_IN_MILLIS}")
+    @Value("${jwt.refresh.expiration}")
     private long refreshTokenExpiration;
 
     public JwtAuthenticationDto generateAuthToken(String email) {
