@@ -4,12 +4,14 @@ import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtService {
 
@@ -44,11 +46,10 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
             return true;
-        } catch (JwtException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn(e.getMessage());
         }
+        return false;
     }
 
     public String getEmailFromToken(String token) {
