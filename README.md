@@ -9,9 +9,9 @@ Microservice-based application for managing personal finances.
 
 - **Auth Service**
   - [x] **Entity & Database**: create `User` entity and setup PostgreSQL table `users` with (id, username, email, password, role)
-  - [ ] **Security**: Configure security, implement JWT token generation and validation
-  - [ ] **Service**: Implement `AuthService` with `registration` and `login`
-  - [ ] **Controller**: Implement  `AuthController` with `registration` and `login` endpoints
+  - [x] **Security**: Configure security, implement JWT token generation and validation
+  - [x] **Service**: Implement `AuthService` with `registration` and `login`
+  - [x] **Controller**: Implement  `AuthController` with `registration` and `login` endpoints
 - **Transaction Service**
   - [x] **Entity & Database**: create `Transaction` entity and configure PostgreSQL connection
   - [x] **Service & Repository**: implement `TransactionService` and `TransactionRepository` for CRUD operations
