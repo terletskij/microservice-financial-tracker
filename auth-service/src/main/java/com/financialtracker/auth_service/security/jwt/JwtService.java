@@ -4,22 +4,24 @@ import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtService {
-
-    @Value("${JWT_SECRET}")
+    // TODO: configure .env file with clear naming and without duplicates
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${JWT_EXPIRATION_TIME_IN_MILLIS}")
+    @Value("${jwt.expiration}")
     private int expirationTime;
 
-    @Value("${JWT_REFRESH_EXPIRATION_TIME_IN_MILLIS}")
+    @Value("${jwt.refresh.expiration}")
     private long refreshTokenExpiration;
 
     public JwtAuthenticationDto generateAuthToken(String email) {
@@ -36,7 +38,7 @@ public class JwtService {
         return jwtDto;
     }
 
-    public boolean validateJwtToken(String token) {
+    public boolean validateJwt(String token) {
         try {
             Jwts.parser()
                     .verifyWith(getSignKey())
@@ -44,11 +46,10 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
             return true;
-        } catch (JwtException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn(e.getMessage());
         }
+        return false;
     }
 
     public String getEmailFromToken(String token) {
@@ -70,7 +71,7 @@ public class JwtService {
     }
 
     private String generateRefreshToken(String email) {
-        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+        Date expirationDate = new Date(System.currentTimeMillis() + refreshTokenExpiration);
         return Jwts.builder()
                 .subject(email)
                 .expiration(expirationDate)
