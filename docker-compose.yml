@@ -3,24 +3,49 @@ services:
     build: ./transaction-service
     container_name: transaction-service
     ports:
-      - "8081:8081" # for portfolio demo purposes
+      - "8081:8081"
     depends_on:
-      - postgres
+      - transaction-db
     env_file:
       - .env
     networks:
       - app-network
 
-  postgres:
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - auth-db
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  transaction-db:
     image: postgres:15
     container_name: transaction-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: ${TRANSACTION_DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - transaction_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - auth_data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -29,4 +54,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  transaction_data:
+  auth_data:
