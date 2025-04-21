@@ -2,18 +2,21 @@ package com.financialtracker.auth_service.service.impl;
 
 import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
 import com.financialtracker.auth_service.dto.RefreshTokenDto;
+import com.financialtracker.auth_service.dto.UserDto;
 import com.financialtracker.auth_service.dto.request.LoginRequest;
 import com.financialtracker.auth_service.dto.request.RegisterRequest;
 import com.financialtracker.auth_service.entity.User;
 import com.financialtracker.auth_service.enums.Role;
 import com.financialtracker.auth_service.exceptions.AlreadyExistsException;
+import com.financialtracker.auth_service.exceptions.InvalidTokenException;
+import com.financialtracker.auth_service.exceptions.UserNotFoundException;
 import com.financialtracker.auth_service.repository.UserRepository;
 import com.financialtracker.auth_service.security.jwt.JwtService;
 import com.financialtracker.auth_service.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,19 +32,19 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public JwtAuthenticationDto logIn(LoginRequest loginRequest) throws AuthenticationException {
+    public JwtAuthenticationDto logIn(LoginRequest loginRequest) {
         User user = findByCredentials(loginRequest);
         return jwtService.generateAuthToken(user.getEmail());
     }
 
     @Override
-    public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws AuthenticationException {
+    public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwt(refreshToken)) {
             User user = findByEmail(jwtService.getEmailFromToken(refreshToken));
             return jwtService.refreshBaseToken(user.getEmail(), refreshToken);
         }
-        throw new AuthenticationException("Invalid refresh token");
+        throw new InvalidTokenException("Invalid refresh token");
     }
 
     @Override
@@ -57,10 +60,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    private User findByCredentials(LoginRequest request) throws AuthenticationException {
+    @Override
+    public User findByCredentials(LoginRequest request) {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -68,10 +72,17 @@ public class UserServiceImpl implements UserService {
                 return user;
             }
         }
-        throw new AuthenticationException("Email or password are incorrect");
+        throw new BadCredentialsException("Email or password are incorrect");
     }
 
-    private User findByEmail(String email) {
+    @Override
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
+
+    @Override
+    public UserDto convertToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
+    }
+
 }
