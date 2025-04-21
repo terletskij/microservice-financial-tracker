@@ -38,7 +38,7 @@ public class JwtService {
         return jwtDto;
     }
 
-    public boolean validateJwtToken(String token) {
+    public boolean validateJwt(String token) {
         try {
             Jwts.parser()
                     .verifyWith(getSignKey())
