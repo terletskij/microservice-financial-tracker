@@ -71,7 +71,7 @@ public class JwtService {
     }
 
     private String generateRefreshToken(String email) {
-        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+        Date expirationDate = new Date(System.currentTimeMillis() + refreshTokenExpiration);
         return Jwts.builder()
                 .subject(email)
                 .expiration(expirationDate)
