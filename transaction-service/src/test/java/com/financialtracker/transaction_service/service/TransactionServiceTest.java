@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,7 +37,6 @@ public class TransactionServiceTest {
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
-
     @Test
     @DisplayName("getTransactionById returns transaction when it exists")
     void testGetTransactionById_Success() {
@@ -46,16 +46,29 @@ public class TransactionServiceTest {
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(t));
 
-        Transaction result = transactionService.getTransactionById(1L);
+        Transaction result = transactionService.getTransactionById(1L, 2L);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
     }
+
+    @Test
+    @DisplayName("getTransactionById throws AccessDeniedException when userId does not match")
+    void testGetTransactionById_Unauthorized() {
+        Transaction t = new Transaction();
+        t.setId(1L);
+        t.setUserId(2L);
+
+        when(transactionRepository.findById(1L)).thenReturn(Optional.of(t));
+
+        assertThrows(AccessDeniedException.class, () -> transactionService.getTransactionById(1L, 3L));
+    }
+
     @Test
     @DisplayName("getTransactionById throws exception when transaction not found")
     void testGetTransactionById_NotFound() {
         when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> transactionService.getTransactionById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> transactionService.getTransactionById(1L, 1L));
     }
 
     @Test
@@ -96,7 +109,7 @@ public class TransactionServiceTest {
         Transaction result = transactionService.createTransaction(request, 1L);
 
         assertNotNull(result.getId(), "Transaction ID should be generated");
-        assertEquals(1L, result.getUserId(), "User ID should be set corrected");
+        assertEquals(1L, result.getUserId(), "User ID should be set correctly");
         assertEquals(new BigDecimal("100.00"), result.getAmount());
 
         verify(modelMapper).map(request, Transaction.class);
@@ -108,9 +121,11 @@ public class TransactionServiceTest {
     void testDeleteTransactionById_Success() {
         Transaction t = new Transaction();
         t.setId(1L);
+        t.setUserId(1L);
+
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(t));
 
-        transactionService.deleteTransactionById(1L);
+        transactionService.deleteTransactionById(1L, 1L);
 
         verify(transactionRepository).delete(t);
     }
@@ -120,7 +135,7 @@ public class TransactionServiceTest {
     void testDeleteTransactionById_NotFound() {
         when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> transactionService.deleteTransactionById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> transactionService.deleteTransactionById(1L, 1L));
     }
 
     @Test
@@ -128,6 +143,7 @@ public class TransactionServiceTest {
     void testUpdateTransactionById_Success() {
         Transaction t = new Transaction();
         t.setId(1L);
+        t.setUserId(1L);
 
         UpdateTransactionRequest request = new UpdateTransactionRequest();
         request.setType(TransactionType.EXPENSE);
@@ -135,11 +151,13 @@ public class TransactionServiceTest {
         request.setDescription("Test desc");
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(t));
-        Transaction result = transactionService.updateTransactionById(1L, request);
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(t);
 
-        assertEquals(new BigDecimal("100.00"), t.getAmount());
-        assertEquals("Test desc", t.getDescription());
-        assertEquals(TransactionType.EXPENSE, t.getType());
+        Transaction result = transactionService.updateTransactionById(1L, 1L, request);
+
+        assertEquals(new BigDecimal("100.00"), result.getAmount());
+        assertEquals("Test desc", result.getDescription());
+        assertEquals(TransactionType.EXPENSE, result.getType());
         verify(transactionRepository).save(t);
     }
 
@@ -150,6 +168,6 @@ public class TransactionServiceTest {
         request.setType(TransactionType.EXPENSE);
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> transactionService.updateTransactionById(1L, request));
+        assertThrows(ResourceNotFoundException.class, () -> transactionService.updateTransactionById(1L, 1L, request));
     }
 }
