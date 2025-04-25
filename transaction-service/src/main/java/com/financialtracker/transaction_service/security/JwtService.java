@@ -42,6 +42,14 @@ public class JwtService {
         return claims.getSubject();
     }
 
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return Long.parseLong(claims.get("userId", String.class));
+    }
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
