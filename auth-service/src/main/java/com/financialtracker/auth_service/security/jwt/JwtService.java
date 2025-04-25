@@ -24,16 +24,16 @@ public class JwtService {
     @Value("${jwt.refresh.expiration}")
     private long refreshTokenExpiration;
 
-    public JwtAuthenticationDto generateAuthToken(String email) {
+    public JwtAuthenticationDto generateAuthToken(String email, Long userId) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
-        jwtDto.setRefreshToken(generateRefreshToken(email));
+        jwtDto.setToken(generateJwtToken(email, userId));
+        jwtDto.setRefreshToken(generateRefreshToken(email, userId));
         return jwtDto;
     }
 
-    public JwtAuthenticationDto refreshBaseToken(String email, String refreshToken) {
+    public JwtAuthenticationDto refreshBaseToken(String email, Long userId, String refreshToken) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
+        jwtDto.setToken(generateJwtToken(email, userId));
         jwtDto.setRefreshToken(refreshToken);
         return jwtDto;
     }
@@ -61,19 +61,21 @@ public class JwtService {
         return claims.getSubject();
     }
 
-    private String generateJwtToken(String email) {
+    private String generateJwtToken(String email, Long userId) {
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId.toString())
                 .expiration(expirationDate)
                 .signWith(getSignKey())
                 .compact();
     }
 
-    private String generateRefreshToken(String email) {
+    private String generateRefreshToken(String email, Long userId) {
         Date expirationDate = new Date(System.currentTimeMillis() + refreshTokenExpiration);
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId.toString())
                 .expiration(expirationDate)
                 .signWith(getSignKey())
                 .compact();
