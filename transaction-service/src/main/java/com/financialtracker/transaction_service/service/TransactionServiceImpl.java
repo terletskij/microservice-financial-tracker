@@ -8,6 +8,7 @@ import com.financialtracker.transaction_service.exceptions.ResourceNotFoundExcep
 import com.financialtracker.transaction_service.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,12 @@ public class TransactionServiceImpl implements TransactionService{
     private final ModelMapper modelMapper;
 
     @Override
-    public Transaction getTransactionById(Long id) {
-        return transactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+    public Transaction getTransactionById(Long id, Long userId) {
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        if (!transaction.getUserId().equals(userId)) {
+            throw new AccessDeniedException("You do not have access to this transaction");
+        }
+        return transaction;
     }
 
     @Override
@@ -37,15 +42,18 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public void deleteTransactionById(Long id) {
+    public void deleteTransactionById(Long id, Long userId) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        if (!transaction.getUserId().equals(userId)) {
+            throw new AccessDeniedException("You do not have access to this transaction");
+        }
         transactionRepository.delete(transaction);
     }
 
     @Override
-    public Transaction updateTransactionById(Long id, UpdateTransactionRequest request) {
-        Transaction transaction = getTransactionById(id);
+    public Transaction updateTransactionById(Long id, Long userId, UpdateTransactionRequest request) {
+        Transaction transaction = getTransactionById(id, userId);
         transaction.setType(request.getType());
         transaction.setAmount(request.getAmount());
         transaction.setDescription(request.getDescription());
