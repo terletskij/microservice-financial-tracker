@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtAuthenticationDto logIn(LoginRequest loginRequest) {
         User user = findByCredentials(loginRequest);
-        return jwtService.generateAuthToken(user.getEmail());
+        return jwtService.generateAuthToken(user.getEmail(), user.getId());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwt(refreshToken)) {
             User user = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(user.getEmail(), refreshToken);
+            return jwtService.refreshBaseToken(user.getEmail(), user.getId(), refreshToken);
         }
         throw new InvalidTokenException("Invalid refresh token");
     }
