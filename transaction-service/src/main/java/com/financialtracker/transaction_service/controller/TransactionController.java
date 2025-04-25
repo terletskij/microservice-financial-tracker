@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
-
-    //todo: after auth-service + API gateway fix endpoints with user verification
 
     @Autowired
     private TransactionService transactionService;
@@ -34,8 +33,8 @@ public class TransactionController {
     })
     @Operation(summary = "Create transaction", description = "Creates a new transaction for the user")
     @PostMapping
-    public ResponseEntity<ApiResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request,
-                                                         @RequestHeader("X-User-Id") Long userId) {
+    public ResponseEntity<ApiResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Transaction transaction = transactionService.createTransaction(request, userId);
         TransactionDto transactionDto = transactionService.convertToDto(transaction);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Transaction successfully created", transactionDto));
@@ -49,7 +48,8 @@ public class TransactionController {
     @Operation(summary = "Get transaction by ID", description = "Retrieves a transaction by its ID")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getTransactionById(@PathVariable Long id) {
-        TransactionDto transactionDto = transactionService.convertToDto(transactionService.getTransactionById(id));
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TransactionDto transactionDto = transactionService.convertToDto(transactionService.getTransactionById(id, userId));
         return ResponseEntity.ok(new ApiResponse("Transaction successfully received", transactionDto));
     }
 
@@ -59,7 +59,8 @@ public class TransactionController {
     })
     @Operation(summary = "Get all transactions by user", description = "Retrieves all transactions by user ID")
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllTransactions(@RequestHeader("X-User-Id") Long userId) {
+    public ResponseEntity<ApiResponse> getAllTransactions() {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Transaction> transactions = transactionService.getAllTransactionsByUserId(userId);
         List<TransactionDto> dtos = transactionService.convertToDtos(transactions);
         return ResponseEntity.ok(new ApiResponse("All transactions successfully received", dtos));
@@ -74,7 +75,8 @@ public class TransactionController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateTransaction(@PathVariable Long id,
                                                          @Valid @RequestBody UpdateTransactionRequest request) {
-        Transaction transaction = transactionService.updateTransactionById(id, request);
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Transaction transaction = transactionService.updateTransactionById(id, userId, request);
         TransactionDto dto = transactionService.convertToDto(transaction);
         return ResponseEntity.ok(new ApiResponse("Transaction update success", dto));
     }
@@ -87,7 +89,8 @@ public class TransactionController {
     @Operation(summary = "Delete transaction", description = "Removes transaction by its ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteTransactionById(id);
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        transactionService.deleteTransactionById(id, userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
