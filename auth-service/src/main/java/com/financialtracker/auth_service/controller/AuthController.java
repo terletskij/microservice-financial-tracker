@@ -1,7 +1,7 @@
 package com.financialtracker.auth_service.controller;
 
-import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
-import com.financialtracker.auth_service.dto.RefreshTokenDto;
+import com.financialtracker.auth_service.dto.response.JwtAuthenticationResponse;
+import com.financialtracker.auth_service.dto.request.RefreshTokenRequest;
 import com.financialtracker.auth_service.dto.UserDto;
 import com.financialtracker.auth_service.dto.request.LoginRequest;
 import com.financialtracker.auth_service.dto.request.RegisterRequest;
@@ -30,7 +30,7 @@ public class AuthController {
     @PostMapping("/log-in")
     public ResponseEntity<ApiResponse> logIn(@Valid @RequestBody LoginRequest request) {
         try {
-            JwtAuthenticationDto authDto = userService.logIn(request);
+            JwtAuthenticationResponse authDto = userService.logIn(request);
             return ResponseEntity.ok(new ApiResponse("Login successful", authDto));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -39,9 +39,9 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse> refresh(@RequestBody RefreshTokenDto refreshTokenDto) {
+    public ResponseEntity<ApiResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         try {
-            JwtAuthenticationDto refreshedToken = userService.refreshToken(refreshTokenDto);
+            JwtAuthenticationResponse refreshedToken = userService.refreshToken(refreshTokenRequest);
             return ResponseEntity.ok(new ApiResponse("Success", refreshedToken));
         } catch (InvalidTokenException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage(), null));

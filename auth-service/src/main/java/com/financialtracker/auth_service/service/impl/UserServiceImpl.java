@@ -1,7 +1,7 @@
 package com.financialtracker.auth_service.service.impl;
 
-import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
-import com.financialtracker.auth_service.dto.RefreshTokenDto;
+import com.financialtracker.auth_service.dto.response.JwtAuthenticationResponse;
+import com.financialtracker.auth_service.dto.request.RefreshTokenRequest;
 import com.financialtracker.auth_service.dto.UserDto;
 import com.financialtracker.auth_service.dto.request.LoginRequest;
 import com.financialtracker.auth_service.dto.request.RegisterRequest;
@@ -32,14 +32,14 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public JwtAuthenticationDto logIn(LoginRequest loginRequest) {
+    public JwtAuthenticationResponse logIn(LoginRequest loginRequest) {
         User user = findByCredentials(loginRequest);
         return jwtService.generateAuthToken(user.getEmail(), user.getId());
     }
 
     @Override
-    public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) {
-        String refreshToken = refreshTokenDto.getRefreshToken();
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String refreshToken = refreshTokenRequest.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwt(refreshToken)) {
             User user = findByEmail(jwtService.getEmailFromToken(refreshToken));
             return jwtService.refreshBaseToken(user.getEmail(), user.getId(), refreshToken);

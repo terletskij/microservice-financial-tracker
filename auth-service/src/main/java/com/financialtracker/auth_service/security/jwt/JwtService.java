@@ -1,6 +1,6 @@
 package com.financialtracker.auth_service.security.jwt;
 
-import com.financialtracker.auth_service.dto.JwtAuthenticationDto;
+import com.financialtracker.auth_service.dto.response.JwtAuthenticationResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,15 +24,15 @@ public class JwtService {
     @Value("${jwt.refresh.expiration}")
     private long refreshTokenExpiration;
 
-    public JwtAuthenticationDto generateAuthToken(String email, Long userId) {
-        JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
+    public JwtAuthenticationResponse generateAuthToken(String email, Long userId) {
+        JwtAuthenticationResponse jwtDto = new JwtAuthenticationResponse();
         jwtDto.setToken(generateJwtToken(email, userId));
         jwtDto.setRefreshToken(generateRefreshToken(email, userId));
         return jwtDto;
     }
 
-    public JwtAuthenticationDto refreshBaseToken(String email, Long userId, String refreshToken) {
-        JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
+    public JwtAuthenticationResponse refreshBaseToken(String email, Long userId, String refreshToken) {
+        JwtAuthenticationResponse jwtDto = new JwtAuthenticationResponse();
         jwtDto.setToken(generateJwtToken(email, userId));
         jwtDto.setRefreshToken(refreshToken);
         return jwtDto;
