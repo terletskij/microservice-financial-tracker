@@ -1,4 +1,4 @@
-package com.financialtracker.auth_service.security;
+package com.financialtracker.auth_service.config;
 
 import com.financialtracker.auth_service.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;

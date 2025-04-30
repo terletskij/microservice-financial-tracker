@@ -1,4 +1,4 @@
-package com.financialtracker.auth_service.security.config;
+package com.financialtracker.auth_service.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
