@@ -12,7 +12,6 @@ Microservice-based application for managing personal finances.
   - [ ] Implement `JWT` validation in `API Gateway`
   - [ ] `Optional` | Extract `userId` from token and forward to services via `headers`
   - [ ] Add `CORS` configuration for frontend
-  - [ ] Implement global exception handling
   - [ ] `Optional` | Add `Spring Actuator` for health check endpoints
         
 - **Auth Service**
