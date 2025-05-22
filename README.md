@@ -8,7 +8,7 @@ Microservice-based application for managing personal finances.
 ## 🚀TODO
 - **API Gateway**
   - [x] Initialize Spring Cloud Gateway 
-  - [ ] Configure basic routes to `auth-service` and `transaction-service`
+  - [X] Configure basic routes to `auth-service` and `transaction-service`
   - [ ] Implement `JWT` validation in `API Gateway`
   - [ ] `Optional` | Extract `userId` from token and forward to services via `headers`
   - [ ] Add `CORS` configuration for frontend
