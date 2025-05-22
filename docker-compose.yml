@@ -1,9 +1,18 @@
 services:
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - transaction-service
+    networks:
+      - app-network
+
   transaction-service:
     build: ./transaction-service
     container_name: transaction-service
-    ports:
-      - "8081:8081"
     depends_on:
       - transaction-db
     env_file:
@@ -14,8 +23,6 @@ services:
   auth-service:
     build: ./auth-service
     container_name: auth-service
-    ports:
-      - "8082:8082"
     depends_on:
       - auth-db
     env_file:
