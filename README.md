@@ -6,6 +6,12 @@
 Microservice-based application for managing personal finances.
 
 ## 🚀TODO
+- **Discovery Service**
+  - [ ] Initialize service with Spring Cloud Netflix Eureka
+  - [ ] Configure application.yml
+  - [ ] Update docker-compose.yml to include the discovery-service with port mapping.
+  - [ ] Configure application.yml in each service to point to http://discovery-service:8761/eureka/ as the defaultZone.
+  - [ ] Verify that all services register with Eureka and that API calls work through the gateway.
 - **API Gateway**
   - [x] Initialize Spring Cloud Gateway 
   - [X] Configure basic routes to `auth-service` and `transaction-service`
