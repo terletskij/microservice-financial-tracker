@@ -2,7 +2,7 @@ spring:
   application:
     name: discovery-service
 
-service:
+server:
   port: 8761
 
 eureka:
@@ -15,7 +15,7 @@ management:
     web:
       exposure:
         include: health,info
-        
+
 logging:
   level:
     com.netflix.eureka: INFO
