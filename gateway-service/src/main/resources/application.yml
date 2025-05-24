@@ -15,3 +15,9 @@ spring:
           uri: http://transaction-service:8081
           predicates:
               - Path=/transactions/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
