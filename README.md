@@ -80,26 +80,42 @@ Start the application by using the following command
 ## How to Use the API
 After you have successfully launched the project (see [steps above](#how-to-install--run)), you can test the API using tools like Postman, curl, or directly via Swagger UI.
 
-Example: Register a New User
-POST auth/register
-📍 URL via gateway:
+**Example**: Register a New User
+**POST** auth/register <br>
+📍 **URL via gateway**:
 
     http://localhost:<GATEWAY_PORT>/auth/register
-Gateway port by default is 8080
-Request Body:
+Gateway port by default is 8080 <br>
+**Request Body**:
 
     {
       "username": "testuser",
       "email": "testuser@example.com",
       "password": "securePassword123"
     }
-Response Body:
+**Response Body**:
 
     {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
+**Example**: Add a Transaction
+**POST** /transactions
 
+📍 **URL via gateway**:
+
+    http://localhost:<GATEWAY_PORT>/transactions
+Gateway port by default is 8080
+**Headers**:
+
+    Authorization: Bearer <your_token>
+**Request Body**:
+
+    {
+      "type": "INCOME",
+      "amount": 1500.00,
+      "description": "Salary"
+    }
 ## 🚀 ROADMAP
 > [!NOTE]
 > New features soon
