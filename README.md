@@ -2,7 +2,7 @@
 > This project is under development.
 > Some new features coming soon
 
-# 📊Financial Tracker
+# 📊 Financial Tracker
 Microservice-based application for managing personal finances.
 ## 🛠 Tech Stack
   - **Language & Framework**: Java 17, Spring Boot, Spring Security, Spring Data JPA
@@ -15,6 +15,7 @@ Microservice-based application for managing personal finances.
 - [About the Project](#-financial-tracker)
 - [Features](#-features)
 - [Installation & Run](#how-to-install--run)
+- [How to Use the API](#how-to-use-the-api)
 - [Roadmap](#-roadmap)
 
 ## 🚀 Features
@@ -61,11 +62,11 @@ In the root directory of the project, create a file named `.env` and add the fol
 > Automatic build coming soon!
 To build service manually for now:
 
-**Step 1**: navigate to service directory
+**Step 1**: Navigate to service directory
 For example, to build transaction-service.
 
     cd transaction-service
-**Step 2**: use the following command
+**Step 2**: Use the following command
 
     mvn clean package
 Repeat these steps for each microservice (auth-service, transaction-service, gateway-service, discovery-service).
@@ -75,6 +76,29 @@ Repeat these steps for each microservice (auth-service, transaction-service, gat
 Start the application by using the following command
 
     docker-compose up --build
+
+## How to Use the API
+After you have successfully launched the project (see [steps above](#how-to-install--run)), you can test the API using tools like Postman, curl, or directly via Swagger UI.
+
+Example: Register a New User
+POST auth/register
+📍 URL via gateway:
+
+    http://localhost:<GATEWAY_PORT>/auth/register
+Gateway port by default is 8080
+Request Body:
+
+    {
+      "username": "testuser",
+      "email": "testuser@example.com",
+      "password": "securePassword123"
+    }
+Response Body:
+
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
 
 ## 🚀 ROADMAP
 > [!NOTE]
