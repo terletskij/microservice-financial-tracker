@@ -68,7 +68,7 @@ For example, to build transaction-service.
     cd transaction-service
 **Step 2**: Use the following command
 
-    mvn clean package
+    mvn clean package -DskipTests
 Repeat these steps for each microservice (auth-service, transaction-service, gateway-service, discovery-service).
 > [!IMPORTANT]
 > 🙏 Sorry for the extra steps right now — we’re working on making the setup fully automatic soon.
