@@ -58,7 +58,7 @@ In the root directory of the project, create a file named `.env` and add the fol
 ### 3. Build services
 > [!IMPORTANT]
 > **Temporary Step**! <br>
-> We're working on simplifying the build process by introducing a parent pom.xml.
+> We're working on simplifying the build process.
 > Automatic build coming soon!
 To build service manually for now:
 
