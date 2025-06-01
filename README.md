@@ -55,24 +55,7 @@ In the root directory of the project, create a file named `.env` and add the fol
 > [!NOTE] 
 > Replace the values (e.g., your_db_username, your_jwt_secret_key, etc.) with your own configuration.
 > These values are used by Docker containers and Spring Boot services during startup.
-### 3. Build services
-> [!IMPORTANT]
-> **Temporary Step**! <br>
-> We're working on simplifying the build process.
-> Automatic build coming soon!
-To build service manually for now:
-
-**Step 1**: Navigate to service directory
-For example, to build transaction-service.
-
-    cd transaction-service
-**Step 2**: Use the following command
-
-    mvn clean package -DskipTests
-Repeat these steps for each microservice (auth-service, transaction-service, gateway-service, discovery-service).
-> [!IMPORTANT]
-> 🙏 Sorry for the extra steps right now — we’re working on making the setup fully automatic soon.
-### 4. Start the application (Docker)
+### 3. Start the application (Docker)
 Start the application by using the following command
 
     docker-compose up --build
