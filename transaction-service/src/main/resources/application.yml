@@ -13,10 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQLDialect
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
