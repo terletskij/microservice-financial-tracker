@@ -4,7 +4,6 @@ import com.financialtracker.transaction_service.dto.TransactionDto;
 import com.financialtracker.transaction_service.dto.request.CreateTransactionRequest;
 import com.financialtracker.transaction_service.dto.request.UpdateTransactionRequest;
 import com.financialtracker.transaction_service.dto.response.ApiResponse;
-import com.financialtracker.transaction_service.entity.Transaction;
 import com.financialtracker.transaction_service.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,9 +34,8 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<ApiResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request) {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Transaction transaction = transactionService.createTransaction(request, userId);
-        TransactionDto transactionDto = transactionService.convertToDto(transaction);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Transaction successfully created", transactionDto));
+        TransactionDto transaction = transactionService.createTransaction(request, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Transaction successfully created", transaction));
     }
 
     @ApiResponses(value = {
@@ -49,7 +47,7 @@ public class TransactionController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getTransactionById(@PathVariable Long id) {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        TransactionDto transactionDto = transactionService.convertToDto(transactionService.getTransactionById(id, userId));
+        TransactionDto transactionDto = transactionService.getTransactionById(id, userId);
         return ResponseEntity.ok(new ApiResponse("Transaction successfully received", transactionDto));
     }
 
@@ -61,9 +59,9 @@ public class TransactionController {
     @GetMapping
     public ResponseEntity<ApiResponse> getAllTransactions() {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Transaction> transactions = transactionService.getAllTransactionsByUserId(userId);
-        List<TransactionDto> dtos = transactionService.convertToDtos(transactions);
-        return ResponseEntity.ok(new ApiResponse("All transactions successfully received", dtos));
+        List<TransactionDto> transactions = transactionService.getAllTransactionsByUserId(userId);
+
+        return ResponseEntity.ok(new ApiResponse("All transactions successfully received", transactions));
     }
 
     @ApiResponses(value = {
@@ -76,9 +74,8 @@ public class TransactionController {
     public ResponseEntity<ApiResponse> updateTransaction(@PathVariable Long id,
                                                          @Valid @RequestBody UpdateTransactionRequest request) {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Transaction transaction = transactionService.updateTransactionById(id, userId, request);
-        TransactionDto dto = transactionService.convertToDto(transaction);
-        return ResponseEntity.ok(new ApiResponse("Transaction update success", dto));
+        TransactionDto transaction = transactionService.updateTransactionById(id, userId, request);
+        return ResponseEntity.ok(new ApiResponse("Transaction update success", transaction));
     }
 
     @ApiResponses(value = {
