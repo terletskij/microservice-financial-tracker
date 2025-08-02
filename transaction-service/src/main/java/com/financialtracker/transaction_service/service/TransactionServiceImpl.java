@@ -1,6 +1,7 @@
 package com.financialtracker.transaction_service.service;
 
 import com.financialtracker.transaction_service.dto.TransactionDto;
+import com.financialtracker.transaction_service.dto.mapper.TransactionMapper;
 import com.financialtracker.transaction_service.dto.request.CreateTransactionRequest;
 import com.financialtracker.transaction_service.dto.request.UpdateTransactionRequest;
 import com.financialtracker.transaction_service.entity.Transaction;
@@ -19,26 +20,36 @@ public class TransactionServiceImpl implements TransactionService{
 
     private final TransactionRepository transactionRepository;
     private final ModelMapper modelMapper;
+    private final TransactionMapper transactionMapper;
 
     @Override
-    public Transaction getTransactionById(Long id, Long userId) {
+    public TransactionDto getTransactionById(Long id, Long userId) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
         if (!transaction.getUserId().equals(userId)) {
             throw new AccessDeniedException("You do not have access to this transaction");
         }
-        return transaction;
+        TransactionDto dto = transactionMapper.toDto(transaction);
+
+        return dto;
     }
 
     @Override
-    public List<Transaction> getAllTransactionsByUserId(Long userId) {
-        return transactionRepository.findAllByUserId(userId);
+    public List<TransactionDto> getAllTransactionsByUserId(Long userId) {
+        List<TransactionDto> dtos = transactionRepository.findAllByUserId(userId)
+                .stream()
+                .map(transactionMapper::toDto)
+                .toList();
+        return dtos;
     }
 
     @Override
-    public Transaction createTransaction(CreateTransactionRequest request, Long userId) {
+    public TransactionDto createTransaction(CreateTransactionRequest request, Long userId) {
         Transaction transaction = modelMapper.map(request, Transaction.class);
         transaction.setUserId(userId);
-        return transactionRepository.save(transaction);
+        TransactionDto dto = transactionMapper.toDto(transaction);
+
+        transactionRepository.save(transaction);
+        return dto;
     }
 
     @Override
@@ -52,31 +63,13 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public Transaction updateTransactionById(Long id, Long userId, UpdateTransactionRequest request) {
-        Transaction transaction = getTransactionById(id, userId);
+    public TransactionDto updateTransactionById(Long id, Long userId, UpdateTransactionRequest request) {
+        Transaction transaction = transactionMapper.toEntity(getTransactionById(id, userId));
         transaction.setType(request.getType());
         transaction.setAmount(request.getAmount());
         transaction.setDescription(request.getDescription());
-        return transactionRepository.save(transaction);
-    }
+        transactionRepository.save(transaction);
 
-    @Override
-    public TransactionDto convertToDto(Transaction transaction) {
-        return modelMapper.map(transaction, TransactionDto.class);
-    }
-
-    @Override
-    public Transaction convertFromDto(TransactionDto dto) {
-        return modelMapper.map(dto, Transaction.class);
-    }
-
-    @Override
-    public List<TransactionDto> convertToDtos(List<Transaction> transactions) {
-        return transactions.stream().map(this::convertToDto).toList();
-    }
-
-    @Override
-    public List<Transaction> convertFromDtos(List<TransactionDto> dtos) {
-        return dtos.stream().map(this::convertFromDto).toList();
+        return transactionMapper.toDto(transaction);
     }
 }
